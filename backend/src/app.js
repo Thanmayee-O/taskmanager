@@ -8,8 +8,12 @@ const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
-// Enable CORS with default settings (allowing Vite dev server)
-app.use(cors());
+// Enable CORS with explicit support for PATCH and standard headers
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // Parse JSON request bodies
 app.use(express.json());
