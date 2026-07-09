@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://taskmanager-o49z.onrender.com/api';
 
 const getHeaders = (customToken) => {
   const token = customToken || localStorage.getItem('token');
