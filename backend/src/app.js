@@ -8,12 +8,15 @@ const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
-// Enable CORS with explicit support for PATCH and standard headers
-app.use(cors({
+const corsOptions = {
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
-}));
+};
+
+// Enable CORS with explicit support for PATCH and standard headers
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Handle pre-flight requests globally
 
 // Parse JSON request bodies
 app.use(express.json());

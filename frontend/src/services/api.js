@@ -86,7 +86,7 @@ export const api = {
 
   updateTask: async (id, taskData) => {
     const response = await fetch(`${API_BASE_URL}/tasks/${id}`, {
-      method: 'PATCH',
+      method: 'PUT',
       headers: {
         ...getHeaders(),
         'Content-Type': 'application/json',
@@ -130,7 +130,7 @@ export const api = {
 
   updateGoal: async (id, goalData) => {
     const response = await fetch(`${API_BASE_URL}/goals/${id}`, {
-      method: 'PATCH',
+      method: 'PUT',
       headers: {
         ...getHeaders(),
         'Content-Type': 'application/json',

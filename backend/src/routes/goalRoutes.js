@@ -13,6 +13,7 @@ router.route('/')
 
 router.route('/:id')
   .patch(updateGoal)
+  .put(updateGoal)
   .delete(deleteGoal);
 
 module.exports = router;

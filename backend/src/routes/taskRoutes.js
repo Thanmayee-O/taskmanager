@@ -13,6 +13,7 @@ router.route('/')
 
 router.route('/:id')
   .patch(updateTask)
+  .put(updateTask)
   .delete(deleteTask);
 
 module.exports = router;
