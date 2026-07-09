@@ -1,0 +1,30 @@
+const express = require('express');
+const cors = require('cors');
+const taskRoutes = require('./routes/taskRoutes');
+const goalRoutes = require('./routes/goalRoutes');
+const authRoutes = require('./routes/authRoutes');
+const { protect } = require('./middleware/authMiddleware');
+const errorHandler = require('./middleware/errorHandler');
+
+const app = express();
+
+// Enable CORS with default settings (allowing Vite dev server)
+app.use(cors());
+
+// Parse JSON request bodies
+app.use(express.json());
+
+// API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/tasks', protect, taskRoutes);
+app.use('/api/goals', protect, goalRoutes);
+
+// Simple Healthcheck/Welcome route
+app.get('/', (req, res) => {
+  res.json({ message: 'Welcome to Focus API' });
+});
+
+// Centralized error handler
+app.use(errorHandler);
+
+module.exports = app;
