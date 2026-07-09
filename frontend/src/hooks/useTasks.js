@@ -1,6 +1,27 @@
 import { useState, useEffect, useCallback } from 'react';
 import { api } from '../services/api';
 
+const sortTasks = (tasksList) => {
+  return [...tasksList].sort((a, b) => {
+    // 1. Completed status grouping
+    if (a.completed !== b.completed) {
+      return a.completed ? 1 : -1;
+    }
+
+    // 2. Due date sorting (soonest first)
+    if (a.dueDate && b.dueDate) {
+      return new Date(a.dueDate) - new Date(b.dueDate);
+    }
+    if (a.dueDate) return -1;
+    if (b.dueDate) return 1;
+
+    // 3. Fallback to newest created first
+    const dateA = a.createdAt ? new Date(a.createdAt) : new Date(0);
+    const dateB = b.createdAt ? new Date(b.createdAt) : new Date(0);
+    return dateB - dateA;
+  });
+};
+
 export const useTasks = () => {
   const [tasks, setTasks] = useState([]);
   const [goals, setGoals] = useState([]);
@@ -21,7 +42,7 @@ export const useTasks = () => {
         api.getTasks(''),
         api.getGoals()
       ]);
-      setTasks(fetchedTasks);
+      setTasks(sortTasks(fetchedTasks));
       setGoals(fetchedGoals);
     } catch (err) {
       setError(err.message || 'Failed to fetch data from server');
@@ -39,8 +60,8 @@ export const useTasks = () => {
   const addTask = async (taskData) => {
     setError(null);
     try {
-      await api.createTask(taskData);
-      await fetchData(); // Reload to get fresh list and updated goal progress
+      const newTask = await api.createTask(taskData);
+      setTasks(prev => sortTasks([...prev, newTask]));
     } catch (err) {
       setError(err.message || 'Failed to create task');
       throw err;
@@ -49,24 +70,35 @@ export const useTasks = () => {
 
   const toggleTask = async (id, currentCompleted) => {
     setError(null);
+    const nextCompleted = !currentCompleted;
+    
+    // Optimistic UI update for tasks (helps make it feel snappy)
+    setTasks(prev =>
+      sortTasks(prev.map(t => (t._id === id ? { ...t, completed: nextCompleted } : t)))
+    );
+
     try {
-      // Optimistic UI update for tasks (helps make it feel snappy)
+      const updatedTask = await api.updateTask(id, { completed: nextCompleted });
+      // Sync the exact updated task from server
       setTasks(prev =>
-        prev.map(t => (t._id === id ? { ...t, completed: !currentCompleted } : t))
+        sortTasks(prev.map(t => (t._id === id ? updatedTask : t)))
       );
-      await api.updateTask(id, { completed: !currentCompleted });
-      await fetchData(); // Sync state with server (re-sorts and updates goals counts)
     } catch (err) {
       setError(err.message || 'Failed to update task');
-      await fetchData(); // Rollback
+      // Rollback to original status
+      setTasks(prev =>
+        sortTasks(prev.map(t => (t._id === id ? { ...t, completed: currentCompleted } : t)))
+      );
     }
   };
 
   const modifyTask = async (id, updates) => {
     setError(null);
     try {
-      await api.updateTask(id, updates);
-      await fetchData();
+      const updatedTask = await api.updateTask(id, updates);
+      setTasks(prev =>
+        sortTasks(prev.map(t => (t._id === id ? updatedTask : t)))
+      );
     } catch (err) {
       setError(err.message || 'Failed to edit task');
       throw err;
@@ -75,14 +107,16 @@ export const useTasks = () => {
 
   const deleteTask = async (id) => {
     setError(null);
+    let previousTasks;
+    setTasks(prev => {
+      previousTasks = prev;
+      return prev.filter(t => t._id !== id);
+    });
     try {
-      // Optimistic delete
-      setTasks(prev => prev.filter(t => t._id !== id));
       await api.deleteTask(id);
-      await fetchData();
     } catch (err) {
       setError(err.message || 'Failed to delete task');
-      await fetchData();
+      setTasks(previousTasks);
     }
   };
 
@@ -90,8 +124,8 @@ export const useTasks = () => {
   const addGoal = async (goalData) => {
     setError(null);
     try {
-      await api.createGoal(goalData);
-      await fetchData();
+      const newGoal = await api.createGoal(goalData);
+      setGoals(prev => [...prev, newGoal]);
     } catch (err) {
       setError(err.message || 'Failed to create goal');
       throw err;
@@ -101,8 +135,10 @@ export const useTasks = () => {
   const modifyGoal = async (id, updates) => {
     setError(null);
     try {
-      await api.updateGoal(id, updates);
-      await fetchData();
+      const updatedGoal = await api.updateGoal(id, updates);
+      setGoals(prev =>
+        prev.map(g => (g._id === id ? updatedGoal : g))
+      );
     } catch (err) {
       setError(err.message || 'Failed to update goal');
       throw err;
@@ -111,11 +147,21 @@ export const useTasks = () => {
 
   const deleteGoal = async (id) => {
     setError(null);
+    let previousGoals;
+    setGoals(prev => {
+      previousGoals = prev;
+      return prev.filter(g => g._id !== id);
+    });
+    // Unlink any associated tasks locally
+    setTasks(prev =>
+      prev.map(t => (t.goalId === id ? { ...t, goalId: null } : t))
+    );
     try {
       await api.deleteGoal(id);
-      await fetchData();
     } catch (err) {
       setError(err.message || 'Failed to delete goal');
+      setGoals(previousGoals);
+      await fetchData(); // Full rollback/sync
     }
   };
 
@@ -136,3 +182,4 @@ export const useTasks = () => {
     refresh: fetchData,
   };
 };
+
