@@ -42,16 +42,16 @@ import {
 
 // Color classes mapping for backgrounds, borders, text, and accents
 const colorDetails = {
-  emerald: { bg: 'bg-emerald-50 dark:bg-emerald-950/20', text: 'text-emerald-650 dark:text-emerald-400', border: 'border-emerald-250 dark:border-emerald-900/40', accent: 'bg-emerald-500' },
-  blue: { bg: 'bg-blue-50 dark:bg-blue-950/20', text: 'text-blue-650 dark:text-blue-400', border: 'border-blue-200 dark:border-blue-900/40', accent: 'bg-blue-500' },
-  purple: { bg: 'bg-purple-50 dark:bg-purple-950/20', text: 'text-purple-655 dark:text-purple-400', border: 'border-purple-200 dark:border-purple-900/40', accent: 'bg-purple-500' },
-  indigo: { bg: 'bg-indigo-50 dark:bg-indigo-950/20', text: 'text-indigo-650 dark:text-indigo-400', border: 'border-indigo-200 dark:border-indigo-900/40', accent: 'bg-indigo-500' },
-  amber: { bg: 'bg-amber-50 dark:bg-amber-950/20', text: 'text-amber-650 dark:text-amber-400', border: 'border-amber-200 dark:border-amber-900/40', accent: 'bg-amber-500' },
-  pink: { bg: 'bg-pink-50 dark:bg-pink-950/20', text: 'text-pink-650 dark:text-pink-400', border: 'border-pink-200 dark:border-pink-900/40', accent: 'bg-pink-500' },
-  rose: { bg: 'bg-rose-50 dark:bg-rose-950/20', text: 'text-rose-650 dark:text-rose-400', border: 'border-rose-200 dark:border-rose-900/40', accent: 'bg-rose-500' },
-  orange: { bg: 'bg-orange-50 dark:bg-orange-950/20', text: 'text-orange-650 dark:text-orange-400', border: 'border-orange-200 dark:border-orange-900/40', accent: 'bg-orange-500' },
-  cyan: { bg: 'bg-cyan-50 dark:bg-cyan-950/20', text: 'text-cyan-650 dark:text-cyan-400', border: 'border-cyan-200 dark:border-cyan-900/40', accent: 'bg-cyan-500' },
-  slate: { bg: 'bg-slate-50 dark:bg-slate-950/20', text: 'text-slate-655 dark:text-slate-400', border: 'border-slate-200 dark:border-slate-800/40', accent: 'bg-slate-500' }
+  emerald: { bg: 'bg-emerald-50 dark:bg-emerald-950/20', text: 'text-emerald-600 dark:text-emerald-400', border: 'border-emerald-200 dark:border-emerald-900/40', accent: 'bg-emerald-500' },
+  blue: { bg: 'bg-blue-50 dark:bg-blue-950/20', text: 'text-blue-600 dark:text-blue-400', border: 'border-blue-200 dark:border-blue-900/40', accent: 'bg-blue-500' },
+  purple: { bg: 'bg-purple-50 dark:bg-purple-950/20', text: 'text-purple-600 dark:text-purple-400', border: 'border-purple-200 dark:border-purple-900/40', accent: 'bg-purple-500' },
+  indigo: { bg: 'bg-indigo-50 dark:bg-indigo-950/20', text: 'text-indigo-600 dark:text-indigo-400', border: 'border-indigo-200 dark:border-indigo-900/40', accent: 'bg-indigo-500' },
+  amber: { bg: 'bg-amber-50 dark:bg-amber-950/20', text: 'text-amber-600 dark:text-amber-400', border: 'border-amber-200 dark:border-amber-900/40', accent: 'bg-amber-500' },
+  pink: { bg: 'bg-pink-50 dark:bg-pink-950/20', text: 'text-pink-600 dark:text-pink-400', border: 'border-pink-200 dark:border-pink-900/40', accent: 'bg-pink-500' },
+  rose: { bg: 'bg-rose-50 dark:bg-rose-950/20', text: 'text-rose-600 dark:text-rose-400', border: 'border-rose-200 dark:border-rose-900/40', accent: 'bg-rose-500' },
+  orange: { bg: 'bg-orange-50 dark:bg-orange-950/20', text: 'text-orange-600 dark:text-orange-400', border: 'border-orange-200 dark:border-orange-900/40', accent: 'bg-orange-500' },
+  cyan: { bg: 'bg-cyan-50 dark:bg-cyan-950/20', text: 'text-cyan-600 dark:text-cyan-400', border: 'border-cyan-200 dark:border-cyan-900/40', accent: 'bg-cyan-500' },
+  slate: { bg: 'bg-slate-50 dark:bg-slate-950/20', text: 'text-slate-600 dark:text-slate-400', border: 'border-slate-200 dark:border-slate-800/40', accent: 'bg-slate-500' }
 };
 
 // Lucide icon mapping
@@ -104,6 +104,13 @@ export default function Dashboard() {
   const [isGoalFormOpen, setIsGoalFormOpen] = useState(false);
   const [goalFormPeriod, setGoalFormPeriod] = useState('week');
   const goalFormRef = useRef(null);
+
+  const scrollToTasks = () => {
+    const el = document.getElementById('tasks-workspace-title');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   // Custom Category Modal States
   const [isCatModalOpen, setIsCatModalOpen] = useState(false);
@@ -505,7 +512,7 @@ export default function Dashboard() {
           <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
             🎯 Focus Board
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-455 mt-1.5 font-semibold">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 font-semibold">
             {new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} — Simplify your productivity.
           </p>
         </div>
@@ -525,36 +532,36 @@ export default function Dashboard() {
       {/* Quick Actions Row */}
       <section className="bg-white dark:bg-slate-900/40 p-4 border border-slate-200 dark:border-slate-850 rounded-2xl shadow-sm dark:shadow-md flex flex-wrap items-center gap-3">
         <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mr-2 flex items-center gap-1">
-          <Zap size={12} className="text-indigo-505 animate-pulse" /> Quick Actions
+          <Zap size={12} className="text-indigo-500 animate-pulse" /> Quick Actions
         </span>
         <button
           onClick={focusTaskInput}
-          className="flex items-center gap-1.5 px-3.5 py-2 bg-indigo-650 hover:bg-indigo-550 text-white rounded-xl text-xs font-bold shadow-md active:scale-95 transition-all"
+          className="flex items-center gap-1.5 px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold shadow-md active:scale-95 transition-all"
         >
           <Plus size={14} /> Add Task
         </button>
         <button
           onClick={() => openGoalForm('week')}
-          className="flex items-center gap-1.5 px-3.5 py-2 bg-slate-50 hover:bg-slate-105 dark:bg-slate-950 dark:hover:bg-slate-900 text-slate-750 dark:text-slate-350 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold active:scale-95 transition-all"
+          className="flex items-center gap-1.5 px-3.5 py-2 bg-blue-700 hover:bg-slate-100 dark:bg-slate-905 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold active:scale-95 transition-all"
         >
-          <Target size={13} className="text-emerald-500" /> + Weekly Goal
+          <Target size={13} className="text-blue-500" /> + Weekly Goal
         </button>
         <button
           onClick={() => openGoalForm('month')}
-          className="flex items-center gap-1.5 px-3.5 py-2 bg-slate-50 hover:bg-slate-105 dark:bg-slate-955 dark:hover:bg-slate-900 text-slate-750 dark:text-slate-355 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold active:scale-95 transition-all"
+          className="flex items-center gap-1.5 px-3.5 py-2 bg-blue-700 hover:bg-slate-100 dark:bg-slate-905 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold active:scale-95 transition-all"
         >
           <Target size={13} className="text-blue-500" /> + Monthly Goal
         </button>
         <div className="h-4 w-px bg-slate-200 dark:bg-slate-800 mx-1 hidden sm:block"></div>
         <button
-          onClick={() => { setActiveFilterTab('completed'); setSelectedIndex(-1); }}
-          className="px-3.5 py-2 text-xs text-slate-600 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-205 font-bold hover:bg-slate-50 dark:hover:bg-slate-955 rounded-xl transition-all"
+          onClick={() => { setActiveFilterTab('completed'); setSelectedIndex(-1); setTimeout(scrollToTasks, 50); }}
+          className="px-3.5 py-2 text-xs text-slate-700 hover:text-indigo-600 dark:text-slate-200 dark:hover:text-indigo-400 font-bold hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 rounded-xl transition-all"
         >
           View Completed
         </button>
         <button
-          onClick={() => { setActiveFilterTab('overdue'); setSelectedIndex(-1); }}
-          className="px-3.5 py-2 text-xs text-slate-600 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-455 font-bold hover:bg-slate-50 dark:hover:bg-slate-950 rounded-xl transition-all"
+          onClick={() => { setActiveFilterTab('overdue'); setSelectedIndex(-1); setTimeout(scrollToTasks, 50); }}
+          className="px-3.5 py-2 text-xs text-slate-700 hover:text-rose-600 dark:text-slate-200 dark:hover:text-rose-400 font-bold hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 rounded-xl transition-all"
         >
           View Overdue ({overdueTasks.length})
         </button>
@@ -562,7 +569,7 @@ export default function Dashboard() {
 
       {/* Notifications highlights */}
       { (dueTodayTasks.length > 0 || overdueTasks.length > 0 || highPriorityTasks.length > 0) && (
-        <section className="bg-amber-50/70 dark:bg-amber-955/15 border border-amber-200 dark:border-amber-900/30 p-4 rounded-2xl flex flex-wrap gap-4 items-center justify-between text-xs text-amber-900 dark:text-amber-400 font-bold animate-in fade-in slide-in-from-top-3 duration-300">
+        <section className="bg-amber-50/70 dark:bg-amber-900/15 border border-amber-200 dark:border-amber-900/30 p-4 rounded-2xl flex flex-wrap gap-4 items-center justify-between text-xs text-amber-900 dark:text-amber-400 font-bold animate-in fade-in slide-in-from-top-3 duration-300">
           <div className="flex flex-wrap items-center gap-4">
             <span className="flex items-center gap-1.5">
               <Bell size={14} className="text-amber-500 animate-swing" />
@@ -579,13 +586,13 @@ export default function Dashboard() {
             {overdueTasks.length > 0 && (
               <button
                 onClick={() => { setActiveFilterTab('overdue'); setSelectedIndex(-1); }}
-                className="bg-rose-50 dark:bg-rose-950/40 text-rose-650 dark:text-rose-405 border border-rose-205 dark:border-rose-900/40 px-2 py-0.5 rounded-lg hover:underline flex items-center gap-1"
+                className="bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900/40 px-2 py-0.5 rounded-lg hover:underline flex items-center gap-1"
               >
                 🚨 {overdueTasks.length} overdue
               </button>
             )}
             {highPriorityTasks.length > 0 && (
-              <span className="bg-white dark:bg-slate-950 px-2 py-0.5 rounded-lg border border-amber-205 dark:border-amber-900/40 flex items-center gap-1">
+              <span className="bg-white dark:bg-slate-950 px-2 py-0.5 rounded-lg border border-amber-200 dark:border-amber-900/40 flex items-center gap-1">
                 ⭐ {highPriorityTasks.length} urgent pending
               </span>
             )}
@@ -605,16 +612,16 @@ export default function Dashboard() {
             <p className="text-2xl font-extrabold text-slate-800 dark:text-white">
               {overallPercentage}%
             </p>
-            <p className="text-[10px] text-slate-500 dark:text-slate-450 font-bold">
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold">
               {completedTasksCount} / {totalTasksCount} tasks completed
             </p>
           </div>
           <div className="relative flex items-center justify-center">
-            <svg className="w-18 h-18 transform -rotate-90">
-              <circle cx="36" cy="36" r={radius} className="stroke-slate-100 dark:stroke-slate-850" strokeWidth="6" fill="transparent" />
-              <circle cx="36" cy="36" r={radius} className="stroke-indigo-650 dark:stroke-indigo-500 transition-all duration-500 ease-out" strokeWidth="6" fill="transparent" strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} strokeLinecap="round" />
+            <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 72 72">
+              <circle cx="36" cy="36" r={radius} className="stroke-slate-100 dark:stroke-slate-800" strokeWidth="6" fill="transparent" />
+              <circle cx="36" cy="36" r={radius} className="stroke-indigo-600 dark:stroke-indigo-500 transition-all duration-500 ease-out" strokeWidth="6" fill="transparent" strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} strokeLinecap="round" />
             </svg>
-            <span className="absolute text-xs font-extrabold text-indigo-650 dark:text-indigo-400">
+            <span className="absolute text-[11px] font-black text-indigo-600 dark:text-indigo-400">
               {overallPercentage}%
             </span>
           </div>
@@ -622,15 +629,15 @@ export default function Dashboard() {
 
         {/* Goal Tracker Widget */}
         <div className="bg-white dark:bg-slate-900/50 p-6 border border-slate-200 dark:border-slate-800/80 rounded-3xl space-y-4 shadow-sm dark:shadow-md hover:shadow-indigo-500/5 dark:hover:shadow-indigo-950/20 transition-all duration-300">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-450 dark:text-slate-500 flex items-center gap-1.5">
-            <Target size={14} className="text-indigo-505" />
+          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
+            <Target size={14} className="text-indigo-500" />
             Goals Alignment
           </h3>
           <div className="space-y-3.5">
             <div className="space-y-1">
               <div className="flex justify-between text-xs font-bold">
-                <span className="text-slate-655 dark:text-slate-350">Weekly Goal Tasks</span>
-                <span className="text-slate-800 dark:text-slate-250">{weeklyGoalPercentage}%</span>
+                <span className="text-slate-600 dark:text-slate-350"> Tasks</span>
+                <span className="text-slate-800 dark:text-slate-300">{weeklyGoalPercentage}%</span>
               </div>
               <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden border border-slate-200/40 dark:border-slate-850">
                 <div className="bg-emerald-500 h-full rounded-full transition-all duration-500" style={{ width: `${weeklyGoalPercentage}%` }} />
@@ -638,8 +645,8 @@ export default function Dashboard() {
             </div>
             <div className="space-y-1">
               <div className="flex justify-between text-xs font-bold">
-                <span className="text-slate-655 dark:text-slate-350">Monthly Goal Tasks</span>
-                <span className="text-slate-800 dark:text-slate-250">{monthlyGoalPercentage}%</span>
+                <span className="text-slate-600 dark:text-slate-350">Monthly Goal Tasks</span>
+                <span className="text-slate-800 dark:text-slate-300">{monthlyGoalPercentage}%</span>
               </div>
               <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden border border-slate-200/40 dark:border-slate-850">
                 <div className="bg-blue-500 h-full rounded-full transition-all duration-500" style={{ width: `${monthlyGoalPercentage}%` }} />
@@ -655,13 +662,13 @@ export default function Dashboard() {
             Productivity Pulse
           </h3>
           <div className="grid grid-cols-2 gap-4 pt-1">
-            <div className="bg-slate-50 dark:bg-slate-950/40 border border-slate-105 dark:border-slate-800/60 p-3 rounded-2xl text-center shadow-inner">
+            <div className="bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-slate-800/60 p-3 rounded-2xl text-center shadow-inner">
               <span className="block text-2xl font-black text-emerald-600 dark:text-emerald-400">{completedTodayCount}</span>
-              <span className="text-[10px] uppercase font-bold text-slate-450 tracking-wider">Done Today</span>
+              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Done Today</span>
             </div>
-            <div className="bg-slate-50 dark:bg-slate-950/40 border border-slate-105 dark:border-slate-800/60 p-3 rounded-2xl text-center shadow-inner">
-              <span className="block text-2xl font-black text-indigo-650 dark:text-indigo-405">{remainingCount}</span>
-              <span className="text-[10px] uppercase font-bold text-slate-450 tracking-wider">Remaining</span>
+            <div className="bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-slate-800/60 p-3 rounded-2xl text-center shadow-inner">
+              <span className="block text-2xl font-black text-indigo-600 dark:text-indigo-400">{remainingCount}</span>
+              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Remaining</span>
             </div>
           </div>
         </div>
@@ -670,12 +677,12 @@ export default function Dashboard() {
       {/* Predefined Category Grid Cards */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-750 dark:text-slate-350 flex items-center gap-2">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-350 flex items-center gap-2">
             <span>📂 Categories Focus</span>
           </h2>
           <button
             onClick={handleOpenCreateCategory}
-            className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-305 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-900/50 rounded-xl transition-all shadow-sm"
+            className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-900/50 rounded-xl transition-all shadow-sm"
           >
             <Plus size={12} /> Add Category
           </button>
@@ -694,8 +701,8 @@ export default function Dashboard() {
                 }}
                 className={`group relative cursor-pointer p-5 rounded-2xl border transition-all duration-350 flex flex-col justify-between shadow-sm hover:shadow-md hover:scale-[1.015] ${
                   isFilterSelected
-                    ? 'border-indigo-650 dark:border-indigo-500 bg-indigo-50/20 dark:bg-indigo-950/20 ring-2 ring-indigo-500/10'
-                    : 'bg-white dark:bg-slate-900/40 border-slate-205 dark:border-slate-800/60 hover:bg-slate-50/50 dark:hover:bg-slate-850/60'
+                    ? 'border-indigo-600 dark:border-indigo-500 bg-indigo-50/20 dark:bg-indigo-950/20 ring-2 ring-indigo-500/10'
+                    : 'bg-white dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/60 hover:bg-slate-50/50 dark:hover:bg-slate-850/60'
                 }`}
               >
                 {/* Actions overlay for custom categories */}
@@ -703,7 +710,7 @@ export default function Dashboard() {
                   <div className="absolute right-3.5 top-3.5 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <button
                       onClick={(e) => handleOpenEditCategory(e, cat)}
-                      className="p-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-750 dark:text-slate-400 dark:hover:text-slate-200 shadow-sm border border-slate-200/50 dark:border-slate-700/50 transition-all"
+                      className="p-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 shadow-sm border border-slate-200/50 dark:border-slate-700/50 transition-all"
                       title="Edit Category"
                     >
                       <Edit2 size={10} />
@@ -730,7 +737,7 @@ export default function Dashboard() {
                 </div>
                 
                 <div className="mt-5 space-y-1.5">
-                  <span className="block text-sm font-bold text-slate-800 dark:text-slate-200 truncate group-hover:text-indigo-650 dark:group-hover:text-indigo-400 transition-colors">
+                  <span className="block text-sm font-bold text-slate-800 dark:text-slate-200 truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                     {cat.name}
                   </span>
                   <div className="flex items-center gap-1.5">
@@ -739,7 +746,7 @@ export default function Dashboard() {
                         cat.percentage >= 100 ? 'bg-emerald-500' : cat.details.accent
                       }`} style={{ width: `${cat.percentage}%` }} />
                     </div>
-                    <span className="text-[9px] font-black text-slate-550 dark:text-slate-450">{cat.percentage}%</span>
+                    <span className="text-[9px] font-black text-slate-500 dark:text-slate-400">{cat.percentage}%</span>
                   </div>
                 </div>
               </div>
@@ -754,7 +761,7 @@ export default function Dashboard() {
         {/* Left column: Goal Focus List (1/3 Width) */}
         <section className="lg:col-span-1 space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-slate-800 dark:text-slate-250 flex items-center gap-2">
+            <h2 className="text-lg font-bold text-slate-800 dark:text-slate-300 flex items-center gap-2">
               <Target className="text-indigo-600 dark:text-indigo-400" size={18} />
               Goals Alignment
             </h2>
@@ -783,7 +790,7 @@ export default function Dashboard() {
             </div>
           ) : goals.length === 0 ? (
             <div className="p-6 text-center bg-slate-200/5 dark:bg-slate-900/5 border border-dashed border-slate-300 dark:border-slate-800/60 rounded-3xl">
-              <p className="text-xs text-slate-550 dark:text-slate-455 leading-relaxed font-semibold">
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-semibold">
                 No active targets. Setup target priorities for **this week** or **this month** to align task structures.
               </p>
             </div>
@@ -804,17 +811,17 @@ export default function Dashboard() {
         <section className="lg:col-span-2 space-y-6">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
-                <ListTodo className="text-indigo-650 dark:text-indigo-400" size={18} />
+              <h2 id="tasks-workspace-title" className="text-lg font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                <ListTodo className="text-indigo-600 dark:text-indigo-400" size={18} />
                 Tasks Workspace
               </h2>
               {/* View mode toggle */}
-              <div className="flex items-center bg-slate-100 dark:bg-slate-955 border border-slate-200 dark:border-slate-850 p-1 rounded-xl shadow-inner">
+              <div className="flex items-center bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 p-1 rounded-xl shadow-inner">
                 <button
                   onClick={() => setViewMode('standard')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                     viewMode === 'standard'
-                      ? 'bg-white dark:bg-slate-900 text-indigo-655 dark:text-indigo-400 shadow-sm'
+                      ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm'
                       : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
                   }`}
                 >
@@ -824,7 +831,7 @@ export default function Dashboard() {
                   onClick={() => setViewMode('category')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                     viewMode === 'category'
-                      ? 'bg-white dark:bg-slate-900 text-indigo-655 dark:text-indigo-400 shadow-sm'
+                      ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm'
                       : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
                   }`}
                 >
@@ -837,12 +844,12 @@ export default function Dashboard() {
             <TaskForm goals={goalsWithProgress} categories={categories} onAddTask={addTask} />
 
             {/* Advanced Filters Toolbar */}
-            <div className="space-y-3 bg-slate-50/50 dark:bg-slate-900/10 p-4 rounded-2xl border border-slate-200 dark:border-slate-805/60 backdrop-blur-sm shadow-sm">
+            <div className="space-y-3 bg-slate-50/50 dark:bg-slate-900/10 p-4 rounded-2xl border border-slate-200 dark:border-slate-800/60 backdrop-blur-sm shadow-sm">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 
                 {/* Search Bar */}
                 <div className="relative flex-1">
-                  <Search className="absolute left-3.5 top-3 text-slate-400 dark:text-slate-555" size={14} />
+                  <Search className="absolute left-3.5 top-3 text-slate-400 dark:text-slate-500" size={14} />
                   <input
                     type="text"
                     value={searchQuery}
@@ -851,12 +858,12 @@ export default function Dashboard() {
                       setSelectedIndex(-1);
                     }}
                     placeholder="Search by title, tags, priority, category..."
-                    className="w-full text-xs pl-9 pr-8 py-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-805 rounded-xl text-slate-800 dark:text-slate-105 placeholder:text-slate-400 dark:placeholder:text-slate-550 focus:outline-none focus:border-indigo-500/50 transition-all shadow-sm"
+                    className="w-full text-xs pl-9 pr-8 py-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-indigo-500/50 transition-all shadow-sm"
                   />
                   {searchQuery && (
                     <button
                       onClick={() => { setSearchQuery(''); setSelectedIndex(-1); }}
-                      className="absolute right-2.5 top-2.5 text-slate-400 dark:text-slate-500 hover:text-slate-705 p-0.5 rounded-md hover:bg-slate-150 transition-colors"
+                      className="absolute right-2.5 top-2.5 text-slate-400 dark:text-slate-500 hover:text-slate-700 p-0.5 rounded-md hover:bg-slate-200 transition-colors"
                       title="Clear search"
                     >
                       <X size={12} />
@@ -866,7 +873,7 @@ export default function Dashboard() {
 
                 {/* Sorting Select */}
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-505 whitespace-nowrap flex items-center gap-1.5">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 whitespace-nowrap flex items-center gap-1.5">
                     <ArrowUpDown size={12} /> Sort By
                   </span>
                   <select
@@ -875,7 +882,7 @@ export default function Dashboard() {
                       setSortBy(e.target.value);
                       setSelectedIndex(-1);
                     }}
-                    className="text-xs px-3 py-2 bg-white dark:bg-slate-955 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-700 dark:text-slate-350 focus:outline-none focus:border-indigo-500/50 shadow-sm"
+                    className="text-xs px-3 py-2 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-700 dark:text-slate-350 focus:outline-none focus:border-indigo-500/50 shadow-sm"
                   >
                     <option value="dueDate">Due Date</option>
                     <option value="priority">Priority</option>
@@ -890,19 +897,19 @@ export default function Dashboard() {
 
               {/* Advanced Filter Drops Row */}
               <div className="flex flex-wrap gap-2 items-center border-t border-slate-200/50 dark:border-slate-800/40 pt-3">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-550 whitespace-nowrap flex items-center gap-1.5 mr-1">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 whitespace-nowrap flex items-center gap-1.5 mr-1">
                   <ListFilter size={12} /> Filters
                 </span>
                 
                 {/* Tab Filter buttons */}
-                <div className="flex flex-wrap gap-1 bg-slate-100 dark:bg-slate-955 border border-slate-200/60 dark:border-slate-800 p-0.5 rounded-xl mr-2">
+                <div className="flex flex-wrap gap-1 bg-slate-100 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800 p-0.5 rounded-xl mr-2">
                   {['all', 'today', 'upcoming', 'overdue', 'completed', 'pending'].map(tab => (
                     <button
                       key={tab}
                       onClick={() => { setActiveFilterTab(tab); setSelectedIndex(-1); }}
                       className={`px-2.5 py-1 text-[10px] font-bold capitalize rounded-lg transition-all ${
                         activeFilterTab === tab
-                          ? 'bg-white dark:bg-slate-900 text-indigo-650 dark:text-indigo-405 shadow-sm'
+                          ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm'
                           : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-350'
                       }`}
                     >
@@ -915,7 +922,7 @@ export default function Dashboard() {
                 <select
                   value={priorityFilter}
                   onChange={(e) => { setPriorityFilter(e.target.value); setSelectedIndex(-1); }}
-                  className="text-[10px] font-bold px-2 py-1 bg-white dark:bg-slate-955 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-650 dark:text-slate-350 focus:outline-none"
+                  className="text-[10px] font-bold px-2 py-1 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-600 dark:text-slate-350 focus:outline-none"
                 >
                   <option value="All">All Priorities</option>
                   <option value="high">🔥 High Priority</option>
@@ -927,7 +934,7 @@ export default function Dashboard() {
                 <select
                   value={goalFilter}
                   onChange={(e) => { setGoalFilter(e.target.value); setSelectedIndex(-1); }}
-                  className="text-[10px] font-bold px-2 py-1 bg-white dark:bg-slate-955 border border-slate-200 dark:border-slate-805 rounded-lg text-slate-655 dark:text-slate-350 focus:outline-none max-w-[140px] truncate"
+                  className="text-[10px] font-bold px-2 py-1 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-600 dark:text-slate-350 focus:outline-none max-w-[140px] truncate"
                 >
                   <option value="All">All Goals</option>
                   <option value="none">No Goal Linked</option>
@@ -942,7 +949,7 @@ export default function Dashboard() {
                 <select
                   value={categoryFilter}
                   onChange={(e) => { setCategoryFilter(e.target.value); setSelectedIndex(-1); }}
-                  className="text-[10px] font-bold px-2 py-1 bg-white dark:bg-slate-955 border border-slate-200 dark:border-slate-805 rounded-lg text-slate-650 dark:text-slate-350 focus:outline-none"
+                  className="text-[10px] font-bold px-2 py-1 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-600 dark:text-slate-350 focus:outline-none"
                 >
                   <option value="All">All Categories</option>
                   {Array.from(new Set(['Work / Office', 'Personal', 'Health', 'Study', ...categories.map(c => c.name), 'Other'])).map(cat => (
@@ -954,7 +961,7 @@ export default function Dashboard() {
                 {(searchQuery || activeFilterTab !== 'all' || categoryFilter !== 'All' || priorityFilter !== 'All' || goalFilter !== 'All') && (
                   <button
                     onClick={handleClearFilters}
-                    className="text-[10px] font-extrabold text-indigo-650 dark:text-indigo-400 hover:text-indigo-500 flex items-center gap-0.5 ml-auto hover:underline"
+                    className="text-[10px] font-extrabold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 flex items-center gap-0.5 ml-auto hover:underline"
                   >
                     <X size={10} /> Reset Filters
                   </button>
@@ -981,7 +988,7 @@ export default function Dashboard() {
             <div className="space-y-8 animate-in fade-in duration-300">
               {Object.keys(tasksByCategory).length === 0 ? (
                 <div className="p-12 text-center bg-slate-200/5 dark:bg-slate-900/5 border border-dashed border-slate-300 dark:border-slate-800/60 rounded-3xl">
-                  <p className="text-xs text-slate-500 dark:text-slate-450 leading-relaxed font-semibold">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-semibold">
                     No tasks found matching current filters.
                   </p>
                 </div>
@@ -994,7 +1001,7 @@ export default function Dashboard() {
                   
                   return (
                     <div key={catName} className="space-y-3.5">
-                      <h3 className="text-xs font-black uppercase tracking-wider text-slate-750 dark:text-slate-300 flex items-center gap-2 border-b border-slate-100 dark:border-slate-850 pb-2">
+                      <h3 className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-2 border-b border-slate-100 dark:border-slate-850 pb-2">
                         <span className={`p-1.5 rounded-lg border ${catDetails.border} ${catDetails.bg}`}>
                           <CatIcon size={12} className={catDetails.text} />
                         </span>
@@ -1042,7 +1049,7 @@ export default function Dashboard() {
                   {/* Overdue Tasks Section */}
                   {overdueList.length > 0 && (
                     <div className="space-y-3.5">
-                      <h3 className="text-xs font-black uppercase tracking-wider text-rose-650 dark:text-rose-400 flex items-center gap-2 border-b border-slate-100 dark:border-slate-855 pb-2">
+                      <h3 className="text-xs font-black uppercase tracking-wider text-rose-600 dark:text-rose-400 flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
                         <ShieldAlert size={14} className="text-rose-500 animate-pulse" />
                         <span>Overdue Tasks</span>
                         <span className="text-[9px] font-black text-white bg-rose-600 px-2 py-0.5 rounded-md border border-rose-600 shadow-sm animate-pulse">
@@ -1067,7 +1074,7 @@ export default function Dashboard() {
                   {/* Today's Tasks Section */}
                   {todayList.length > 0 && (
                     <div className="space-y-3.5">
-                      <h3 className="text-xs font-black uppercase tracking-wider text-slate-705 dark:text-slate-300 flex items-center gap-2 border-b border-slate-100 dark:border-slate-850 pb-2">
+                      <h3 className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-2 border-b border-slate-100 dark:border-slate-850 pb-2">
                         <Clock size={14} className="text-emerald-500" />
                         <span>Today's Focus</span>
                         <span className="text-[10px] font-bold text-slate-400 bg-white dark:bg-slate-950 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-850">
@@ -1092,10 +1099,10 @@ export default function Dashboard() {
                   {/* Upcoming Tasks Section */}
                   {upcomingList.length > 0 && (
                     <div className="space-y-3.5">
-                      <h3 className="text-xs font-black uppercase tracking-wider text-slate-750 dark:text-slate-350 flex items-center gap-2 border-b border-slate-100 dark:border-slate-850 pb-2">
+                      <h3 className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-350 flex items-center gap-2 border-b border-slate-100 dark:border-slate-850 pb-2">
                         <Calendar size={14} className="text-indigo-500" />
                         <span>Upcoming targets</span>
-                        <span className="text-[10px] font-bold text-slate-400 bg-white dark:bg-slate-950 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-855">
+                        <span className="text-[10px] font-bold text-slate-400 bg-white dark:bg-slate-950 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-800">
                           {upcomingList.length}
                         </span>
                       </h3>
@@ -1117,10 +1124,10 @@ export default function Dashboard() {
                   {/* Backlog / No Due Date Tasks Section */}
                   {backlogList.length > 0 && (
                     <div className="space-y-3.5">
-                      <h3 className="text-xs font-black uppercase tracking-wider text-slate-750 dark:text-slate-300 flex items-center gap-2 border-b border-slate-100 dark:border-slate-850 pb-2">
+                      <h3 className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-2 border-b border-slate-100 dark:border-slate-850 pb-2">
                         <ListTodo size={14} className="text-slate-400" />
                         <span>Focus Backlog (No Date)</span>
-                        <span className="text-[10px] font-bold text-slate-400 bg-white dark:bg-slate-955 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-850">
+                        <span className="text-[10px] font-bold text-slate-400 bg-white dark:bg-slate-950 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-850">
                           {backlogList.length}
                         </span>
                       </h3>
@@ -1142,7 +1149,7 @@ export default function Dashboard() {
                   {/* Completed Today Section */}
                   {completedTodayList.length > 0 && (
                     <div className="space-y-3.5">
-                      <h3 className="text-xs font-black uppercase tracking-wider text-slate-450 flex items-center gap-2 border-b border-slate-100 dark:border-slate-850 pb-2">
+                      <h3 className="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-2 border-b border-slate-100 dark:border-slate-850 pb-2">
                         <CheckCircle2 size={14} className="text-emerald-500" />
                         <span>Completed Today</span>
                         <span className="text-[10px] font-bold text-slate-400 bg-white dark:bg-slate-950 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-850">
@@ -1167,7 +1174,7 @@ export default function Dashboard() {
                   {/* Completed Earlier Section */}
                   {otherCompletedList.length > 0 && (
                     <div className="space-y-3.5">
-                      <h3 className="text-xs font-black uppercase tracking-wider text-slate-455 flex items-center gap-2 border-b border-slate-100 dark:border-slate-850 pb-2">
+                      <h3 className="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-2 border-b border-slate-100 dark:border-slate-850 pb-2">
                         <CheckCircle2 size={14} className="text-slate-350" />
                         <span>Completed Earlier</span>
                         <span className="text-[10px] font-bold text-slate-400 bg-white dark:bg-slate-950 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-850">
@@ -1198,7 +1205,7 @@ export default function Dashboard() {
             <div className="text-center pt-2">
               <p className="text-[10px] text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1.5 font-bold uppercase tracking-wider bg-slate-100/40 dark:bg-slate-900/10 border border-slate-200/50 dark:border-slate-800/40 py-2.5 px-4 rounded-xl">
                 <Sparkles size={11} className="text-indigo-600 dark:text-indigo-400 animate-pulse" />
-                <span>Shortcuts: <kbd className="bg-white dark:bg-slate-955 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-800 shadow-sm text-slate-650 dark:text-slate-450 mx-0.5">↓↑</kbd> Navigate | <kbd className="bg-white dark:bg-slate-955 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-800 shadow-sm text-slate-655 dark:text-slate-455 mx-0.5">Space</kbd> Check | <kbd className="bg-white dark:bg-slate-955 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-800 shadow-sm text-slate-650 dark:text-slate-455 mx-0.5">Del</kbd> Delete | <kbd className="bg-white dark:bg-slate-955 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-800 shadow-sm text-slate-650 dark:text-slate-450 mx-0.5">Ctrl+K</kbd> Quick-Add</span>
+                <span>Shortcuts: <kbd className="bg-white dark:bg-slate-950 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-800 shadow-sm text-slate-600 dark:text-slate-400 mx-0.5">↓↑</kbd> Navigate | <kbd className="bg-white dark:bg-slate-950 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-800 shadow-sm text-slate-600 dark:text-slate-400 mx-0.5">Space</kbd> Check | <kbd className="bg-white dark:bg-slate-950 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-800 shadow-sm text-slate-600 dark:text-slate-400 mx-0.5">Del</kbd> Delete | <kbd className="bg-white dark:bg-slate-950 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-800 shadow-sm text-slate-600 dark:text-slate-400 mx-0.5">Ctrl+K</kbd> Quick-Add</span>
               </p>
             </div>
           )}
@@ -1214,12 +1221,12 @@ export default function Dashboard() {
           >
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
               <h3 className="text-base font-extrabold text-slate-800 dark:text-white flex items-center gap-2">
-                {catModalMode === 'create' ? <Plus size={18} className="text-indigo-650" /> : <Edit2 size={16} className="text-indigo-650" />}
+                {catModalMode === 'create' ? <Plus size={18} className="text-indigo-600" /> : <Edit2 size={16} className="text-indigo-600" />}
                 {catModalMode === 'create' ? 'Create Custom Category' : 'Edit Custom Category'}
               </h3>
               <button
                 onClick={() => setIsCatModalOpen(false)}
-                className="text-slate-400 dark:text-slate-500 hover:text-slate-650 dark:hover:text-slate-250 p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all"
+                className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all"
               >
                 <X size={18} />
               </button>
@@ -1248,7 +1255,7 @@ export default function Dashboard() {
                 <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                   Select Icon
                 </label>
-                <div className="grid grid-cols-6 gap-2 bg-slate-50 dark:bg-slate-955 p-3 rounded-2xl border border-slate-200/50 dark:border-slate-800/40">
+                <div className="grid grid-cols-6 gap-2 bg-slate-50 dark:bg-slate-950 p-3 rounded-2xl border border-slate-200/50 dark:border-slate-800/40">
                   {Object.keys(availableIcons).map((iconName) => {
                     const IconComponent = availableIcons[iconName];
                     const isSelected = catIcon === iconName;
@@ -1259,7 +1266,7 @@ export default function Dashboard() {
                         onClick={() => setCatIcon(iconName)}
                         className={`p-2.5 rounded-xl border flex items-center justify-center transition-all ${
                           isSelected
-                            ? 'bg-indigo-650 border-indigo-650 text-white shadow-md scale-105'
+                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-md scale-105'
                             : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-100'
                         }`}
                         title={iconName}
@@ -1276,7 +1283,7 @@ export default function Dashboard() {
                 <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                   Choose Accent Color
                 </label>
-                <div className="grid grid-cols-5 gap-2.5 bg-slate-50 dark:bg-slate-955 p-3.5 rounded-2xl border border-slate-200/50 dark:border-slate-800/40">
+                <div className="grid grid-cols-5 gap-2.5 bg-slate-50 dark:bg-slate-950 p-3.5 rounded-2xl border border-slate-200/50 dark:border-slate-800/40">
                   {Object.keys(colorDetails).map((colorName) => {
                     const isSelected = catColor === colorName;
                     const details = colorDetails[colorName];
@@ -1308,14 +1315,14 @@ export default function Dashboard() {
                 <button
                   type="button"
                   onClick={() => setIsCatModalOpen(false)}
-                  className="px-4 py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-950 dark:hover:bg-slate-900 text-slate-500 dark:text-slate-450 rounded-xl text-xs font-bold transition-all border border-slate-200/80 dark:border-slate-800"
+                  className="px-4 py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-950 dark:hover:bg-slate-900 text-slate-500 dark:text-slate-400 rounded-xl text-xs font-bold transition-all border border-slate-200/80 dark:border-slate-800"
                   disabled={isCatSaving}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-indigo-650 hover:bg-indigo-550 text-white rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 disabled:opacity-50 disabled:scale-100"
+                  className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 disabled:opacity-50 disabled:scale-100"
                   disabled={isCatSaving}
                 >
                   {isCatSaving ? 'Saving...' : 'Save Category'}

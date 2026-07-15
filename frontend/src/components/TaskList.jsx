@@ -20,13 +20,13 @@ export default function TaskList({
     if (searchQuery && searchQuery.trim()) {
       return (
         <div className="flex flex-col items-center justify-center p-12 text-center bg-slate-200/10 dark:bg-slate-900/10 border border-dashed border-slate-300 dark:border-slate-800/80 rounded-3xl backdrop-blur-sm animate-in fade-in zoom-in-95 duration-350">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-150 dark:border-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-4 shadow-sm">
+          <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-4 shadow-sm">
             <Search size={20} />
           </div>
           <h3 className="text-base font-bold text-slate-800 dark:text-slate-200 mb-1">
             No matching tasks found
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-450 max-w-xs leading-relaxed font-semibold mb-4">
+          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed font-semibold mb-4">
             Try modifying your search keywords or clear the filter to see your list.
           </p>
           <button
@@ -43,7 +43,7 @@ export default function TaskList({
     // Default workspace empty states
     return (
       <div className="flex flex-col items-center justify-center p-12 text-center bg-slate-200/10 dark:bg-slate-900/10 border border-dashed border-slate-300 dark:border-slate-800/80 rounded-3xl backdrop-blur-sm animate-in fade-in zoom-in-95 duration-350">
-        <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-150 dark:border-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-4 shadow-sm">
+        <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-4 shadow-sm">
           <ClipboardList size={22} />
         </div>
         <h3 className="text-base font-bold text-slate-800 dark:text-slate-200 mb-1">
@@ -53,7 +53,7 @@ export default function TaskList({
             ? 'All tasks completed!'
             : 'Your focus is clear'}
         </h3>
-        <p className="text-xs text-slate-500 dark:text-slate-450 max-w-xs leading-relaxed font-semibold">
+        <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed font-semibold">
           {filter === 'completed'
             ? 'Finish some tasks from your active list to see them here.'
             : filter === 'active'
@@ -61,7 +61,7 @@ export default function TaskList({
             : 'Capture tasks and align them with your weekly or monthly goals.'}
         </p>
         {filter === 'active' && (
-          <div className="flex items-center gap-1.5 mt-4 text-[10px] font-bold text-indigo-700 dark:text-indigo-400 tracking-wider uppercase bg-indigo-50 dark:bg-indigo-950/20 px-3 py-1.5 rounded-full border border-indigo-150 dark:border-indigo-900/30">
+          <div className="flex items-center gap-1.5 mt-4 text-[10px] font-bold text-indigo-700 dark:text-indigo-400 tracking-wider uppercase bg-indigo-50 dark:bg-indigo-950/20 px-3 py-1.5 rounded-full border border-indigo-100 dark:border-indigo-900/30">
             <Sparkles size={10} />
             Focus Achieved
           </div>

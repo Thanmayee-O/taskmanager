@@ -8,7 +8,7 @@ export default function FilterBar({ filter, setFilter, taskCounts }) {
   ];
 
   return (
-    <div className="flex bg-slate-200/60 dark:bg-slate-900/60 p-1 rounded-2xl border border-slate-250 dark:border-slate-800/80 backdrop-blur-md shadow-sm">
+    <div className="flex bg-slate-200/60 dark:bg-slate-900/60 p-1 rounded-2xl border border-slate-300 dark:border-slate-800/80 backdrop-blur-md shadow-sm">
       {tabs.map((tab) => {
         const isActive = filter === tab.id;
         return (

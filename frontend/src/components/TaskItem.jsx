@@ -101,12 +101,12 @@ export default function TaskItem({ task, goals, categories = [], onToggleTask, o
     blue: 'bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-900/30',
     purple: 'bg-purple-50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-900/30',
     indigo: 'bg-indigo-50 dark:bg-indigo-950/30 text-indigo-700 dark:text-indigo-400 border-indigo-200 dark:border-indigo-900/30',
-    amber: 'bg-amber-50 dark:bg-amber-950/30 text-amber-705 dark:text-amber-450 border-amber-200 dark:border-amber-900/30',
+    amber: 'bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-900/30',
     pink: 'bg-pink-50 dark:bg-pink-950/30 text-pink-700 dark:text-pink-400 border-pink-200 dark:border-pink-900/30',
-    rose: 'bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-450 border-rose-200 dark:border-rose-900/30',
+    rose: 'bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-900/30',
     orange: 'bg-orange-50 dark:bg-orange-950/30 text-orange-700 dark:text-orange-400 border-orange-200 dark:border-orange-900/30',
     cyan: 'bg-cyan-50 dark:bg-cyan-950/30 text-cyan-700 dark:text-cyan-400 border-cyan-200 dark:border-cyan-900/30',
-    slate: 'bg-slate-50 dark:bg-slate-950/40 text-slate-700 dark:text-slate-450 border-slate-200 dark:border-slate-805/40'
+    slate: 'bg-slate-50 dark:bg-slate-950/40 text-slate-700 dark:text-slate-400 border-slate-200 dark:border-slate-800/40'
   };
 
   const badgeStyle = categoryColorStyles[categoryColor] || categoryColorStyles.slate;
@@ -126,7 +126,7 @@ export default function TaskItem({ task, goals, categories = [], onToggleTask, o
         onClick={() => onToggleTask(_id, completed)}
         className={`mt-0.5 w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all ${
           completed
-            ? 'bg-indigo-650 dark:bg-indigo-600 border-indigo-650 dark:border-indigo-600 text-white'
+            ? 'bg-indigo-600 dark:bg-indigo-600 border-indigo-600 dark:border-indigo-600 text-white'
             : 'border-slate-300 dark:border-slate-700 hover:border-indigo-500 bg-slate-50 dark:bg-slate-950/40'
         }`}
         title={completed ? 'Mark as active' : 'Mark as completed'}
@@ -146,7 +146,7 @@ export default function TaskItem({ task, goals, categories = [], onToggleTask, o
             onBlur={handleSave}
             onKeyDown={handleKeyDown}
             disabled={isSaving}
-            className="w-full bg-white dark:bg-slate-950/60 border border-indigo-500 rounded-xl px-3 py-1.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-550"
+            className="w-full bg-white dark:bg-slate-950/60 border border-indigo-500 rounded-xl px-3 py-1.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-500"
           />
         ) : (
           <h3
@@ -180,7 +180,7 @@ export default function TaskItem({ task, goals, categories = [], onToggleTask, o
                   ? 'bg-rose-50 dark:bg-rose-950/80 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-900/60'
                   : completed
                   ? 'bg-slate-100 dark:bg-slate-950 text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-900'
-                  : 'bg-slate-100 dark:bg-slate-950 text-slate-550 dark:text-slate-400 border-slate-200 dark:border-slate-800'
+                  : 'bg-slate-100 dark:bg-slate-950 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-800'
               }`}
             >
               <Calendar size={10} />
@@ -191,7 +191,7 @@ export default function TaskItem({ task, goals, categories = [], onToggleTask, o
 
           {/* Linked Goal */}
           {linkedGoal && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/30 text-indigo-700 dark:text-indigo-400 border border-indigo-150 dark:border-indigo-900/30 max-w-[150px] truncate">
+            <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/30 text-indigo-700 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-900/30 max-w-[150px] truncate">
               <Target size={10} />
               {linkedGoal.title}
             </span>

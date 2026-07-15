@@ -133,12 +133,18 @@ export const AuthProvider = ({ children }) => {
       {children}
 
       {toast && (
-        <div className="fixed bottom-5 right-5 z-[9999] p-4 bg-white dark:bg-slate-900 border-l-4 rounded-r-2xl shadow-xl border-indigo-500 dark:border-indigo-600 max-w-sm flex items-start gap-3 backdrop-blur-md animate-in fade-in slide-in-from-bottom-5 duration-300">
+        <div className={`fixed bottom-5 right-5 z-[9999] p-4 bg-white dark:bg-slate-900 border-l-4 rounded-r-2xl shadow-xl max-w-sm flex items-start gap-3 backdrop-blur-md animate-in fade-in slide-in-from-bottom-5 duration-300 ${
+          toast.type === 'success'
+            ? 'border-emerald-500 dark:border-emerald-400'
+            : toast.type === 'error'
+            ? 'border-rose-500 dark:border-rose-400'
+            : 'border-indigo-500 dark:border-indigo-400'
+        }`}>
           <div className="mt-0.5">
             {toast.type === 'success' ? (
               <CheckCircle2 className="text-emerald-600 dark:text-emerald-400" size={18} />
             ) : toast.type === 'error' ? (
-              <XCircle className="text-rose-600 dark:text-rose-450" size={18} />
+              <XCircle className="text-rose-600 dark:text-rose-400" size={18} />
             ) : (
               <AlertCircle className="text-indigo-600 dark:text-indigo-400" size={18} />
             )}

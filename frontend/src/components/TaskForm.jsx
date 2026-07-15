@@ -203,8 +203,8 @@ export default function TaskForm({ goals, categories = [], onAddTask }) {
                 disabled={isSubmitting || isParsing}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold shadow-md active:scale-95 transition-all flex items-center gap-1.5 ${
                   isParsing 
-                    ? 'bg-indigo-150 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 cursor-wait' 
-                    : 'bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/20 dark:hover:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 hover:text-indigo-750 dark:hover:text-indigo-300'
+                    ? 'bg-indigo-100 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 cursor-wait' 
+                    : 'bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/20 dark:hover:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300'
                 }`}
                 title="Refine task details with Gemini AI"
               >
@@ -280,7 +280,7 @@ export default function TaskForm({ goals, categories = [], onAddTask }) {
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value)}
-                className="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-650 dark:text-slate-350 focus:outline-none focus:border-indigo-500/50"
+                className="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-600 dark:text-slate-350 focus:outline-none focus:border-indigo-500/50"
               >
                 <option value="low">Low Priority</option>
                 <option value="medium">Medium Priority</option>
@@ -311,7 +311,7 @@ export default function TaskForm({ goals, categories = [], onAddTask }) {
               <select
                 value={goalId}
                 onChange={(e) => setGoalId(e.target.value)}
-                className="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-650 dark:text-slate-350 focus:outline-none focus:border-indigo-500/50"
+                className="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-600 dark:text-slate-350 focus:outline-none focus:border-indigo-500/50"
               >
                 <option value="">No goal linked</option>
                 {goals.map((goal) => (
@@ -325,13 +325,13 @@ export default function TaskForm({ goals, categories = [], onAddTask }) {
             {/* Category */}
             <div className="space-y-1">
               <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1">
-                <Tag size={12} className="text-indigo-550 dark:text-indigo-400" />
+                <Tag size={12} className="text-indigo-500 dark:text-indigo-400" />
                 Category
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-650 dark:text-slate-350 focus:outline-none focus:border-indigo-500/50"
+                className="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-600 dark:text-slate-350 focus:outline-none focus:border-indigo-500/50"
               >
                 {Array.from(new Set(['Work / Office', 'Personal', 'Health', 'Study', ...categories.map(c => c.name), 'Other'])).map(cat => (
                   <option key={cat} value={cat}>{cat}</option>

@@ -169,7 +169,7 @@ export default function Login() {
 
       {/* Top Header Row */}
       <header className="relative w-full max-w-6xl mx-auto px-6 h-20 flex items-center justify-between z-10">
-        <span className="text-2xl font-black bg-gradient-to-r from-indigo-650 to-violet-650 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">
+        <span className="text-2xl font-black bg-gradient-to-r from-indigo-600 to-violet-650 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">
           Focus
         </span>
         <ThemeToggle />
@@ -193,12 +193,12 @@ export default function Login() {
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               <div className="p-4 bg-white/60 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800/80 rounded-2xl shadow-sm">
-                <h4 className="text-xs font-bold text-slate-800 dark:text-slate-250 uppercase tracking-wide mb-1">Instant Capturing</h4>
-                <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-450 leading-relaxed">Type your task, hit Enter, and organize due dates later.</p>
+                <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wide mb-1">Instant Capturing</h4>
+                <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 leading-relaxed">Type your task, hit Enter, and organize due dates later.</p>
               </div>
               <div className="p-4 bg-white/60 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800/80 rounded-2xl shadow-sm">
-                <h4 className="text-xs font-bold text-slate-800 dark:text-slate-250 uppercase tracking-wide mb-1">Aligned Goals</h4>
-                <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-450 leading-relaxed">Link tasks to weekly/monthly targets and watch progress updates live.</p>
+                <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wide mb-1">Aligned Goals</h4>
+                <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 leading-relaxed">Link tasks to weekly/monthly targets and watch progress updates live.</p>
               </div>
             </div>
           </div>
@@ -211,7 +211,7 @@ export default function Login() {
                 <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mb-2">
                   {isLoginMode ? 'Welcome back' : 'Create your workspace'}
                 </h3>
-                <p className="text-xs font-semibold text-slate-500 dark:text-slate-450">
+                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
                   {isLoginMode ? 'Enter credentials to access your task board.' : 'Get started with a private personal account.'}
                 </p>
               </div>
@@ -394,7 +394,7 @@ export default function Login() {
 
               {/* Mode Toggle Link */}
               <div className="mt-6 text-center text-xs">
-                <span className="text-slate-500 dark:text-slate-450 font-medium">
+                <span className="text-slate-500 dark:text-slate-400 font-medium">
                   {isLoginMode ? "Don't have an account? " : 'Already have an account? '}
                 </span>
                 <button
