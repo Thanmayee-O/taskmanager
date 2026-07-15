@@ -3,7 +3,7 @@ import { Calendar, ChevronDown, ChevronUp, Tag, ShieldAlert, Target, Plus, Spark
 import { parseTaskFromText } from '../services/taskParser';
 import { api } from '../services/api';
 
-export default function TaskForm({ goals, onAddTask }) {
+export default function TaskForm({ goals, categories = [], onAddTask }) {
   const [title, setTitle] = useState('');
   const [showOptions, setShowOptions] = useState(false);
   const [priority, setPriority] = useState('medium');
@@ -14,6 +14,7 @@ export default function TaskForm({ goals, onAddTask }) {
   const [error, setError] = useState('');
   const [parsedPreview, setParsedPreview] = useState(null);
   const [isParsing, setIsParsing] = useState(false);
+  const [category, setCategory] = useState('Other');
 
   const inputRef = useRef(null);
 
@@ -47,6 +48,7 @@ export default function TaskForm({ goals, onAddTask }) {
 
       // Auto-fill state fields so they sync into advanced options too
       if (parsed.priority) setPriority(parsed.priority);
+      if (parsed.category) setCategory(parsed.category === 'Office / Work' ? 'Work / Office' : parsed.category);
       if (parsed.dueDate) {
         setDueDate(parsed.dueDate.split('T')[0]);
       }
@@ -75,6 +77,7 @@ export default function TaskForm({ goals, onAddTask }) {
 
       if (parsed.title) setTitle(parsed.title);
       if (parsed.priority) setPriority(parsed.priority);
+      if (parsed.category) setCategory(parsed.category === 'Office / Work' ? 'Work / Office' : parsed.category);
       if (parsed.dueDate) {
         setDueDate(parsed.dueDate.split('T')[0]);
       }
@@ -88,6 +91,7 @@ export default function TaskForm({ goals, onAddTask }) {
       const parsed = parseTaskFromText(title);
       if (parsed.title) setTitle(parsed.title);
       if (parsed.priority) setPriority(parsed.priority);
+      if (parsed.category) setCategory(parsed.category === 'Office / Work' ? 'Work / Office' : parsed.category);
       if (parsed.dueDate) {
         setDueDate(parsed.dueDate.split('T')[0]);
       }
@@ -136,6 +140,7 @@ export default function TaskForm({ goals, onAddTask }) {
       const taskData = {
         title: parsed.title.trim(),
         priority: priority || parsed.priority,
+        category: category || parsed.category || 'Other',
         dueDate: finalDueDate,
         tags,
         goalId: goalId || null,
@@ -148,6 +153,7 @@ export default function TaskForm({ goals, onAddTask }) {
       setDueDate('');
       setGoalId('');
       setPriority('medium');
+      setCategory('Other');
       setParsedPreview(null);
       // Refocus input
       inputRef.current?.focus();
@@ -264,7 +270,7 @@ export default function TaskForm({ goals, onAddTask }) {
 
         {/* Expandable Options Panel */}
         {showOptions && (
-          <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800/80 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800/80 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 animate-in fade-in slide-in-from-top-2 duration-200">
             {/* Priority */}
             <div className="space-y-1">
               <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1">
@@ -312,6 +318,23 @@ export default function TaskForm({ goals, onAddTask }) {
                   <option key={goal._id} value={goal._id}>
                     ({goal.period === 'week' ? 'W' : 'M'}) {goal.title}
                   </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Category */}
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                <Tag size={12} className="text-indigo-550 dark:text-indigo-400" />
+                Category
+              </label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-650 dark:text-slate-350 focus:outline-none focus:border-indigo-500/50"
+              >
+                {Array.from(new Set(['Work / Office', 'Personal', 'Health', 'Study', ...categories.map(c => c.name), 'Other'])).map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>
             </div>

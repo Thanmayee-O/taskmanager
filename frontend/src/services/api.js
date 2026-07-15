@@ -73,9 +73,29 @@ export const api = {
   },
 
   // Tasks
-  getTasks: async (status = '') => {
-    const url = status ? `${API_BASE_URL}/tasks?status=${status}` : `${API_BASE_URL}/tasks`;
+  getTasks: async (params = {}) => {
+    let url = `${API_BASE_URL}/tasks`;
+    if (typeof params === 'string') {
+      if (params) url += `?status=${params}`;
+    } else if (params && typeof params === 'object') {
+      const query = new URLSearchParams();
+      Object.entries(params).forEach(([key, val]) => {
+        if (val !== undefined && val !== null && val !== '') {
+          query.append(key, val);
+        }
+      });
+      const queryString = query.toString();
+      if (queryString) url += `?${queryString}`;
+    }
     const response = await fetch(url, {
+      headers: getHeaders(),
+    });
+    const result = await handleResponse(response);
+    return result.data;
+  },
+
+  getTaskAnalytics: async () => {
+    const response = await fetch(`${API_BASE_URL}/tasks/analytics`, {
       headers: getHeaders(),
     });
     const result = await handleResponse(response);
@@ -166,6 +186,49 @@ export const api = {
 
   deleteGoal: async (id) => {
     const response = await fetch(`${API_BASE_URL}/goals/${id}`, {
+      method: 'DELETE',
+      headers: getHeaders(),
+    });
+    const result = await handleResponse(response);
+    return result.data;
+  },
+
+  getCategories: async () => {
+    const response = await fetch(`${API_BASE_URL}/categories`, {
+      headers: getHeaders(),
+    });
+    const result = await handleResponse(response);
+    return result.data;
+  },
+
+  createCategory: async (categoryData) => {
+    const response = await fetch(`${API_BASE_URL}/categories`, {
+      method: 'POST',
+      headers: {
+        ...getHeaders(),
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(categoryData),
+    });
+    const result = await handleResponse(response);
+    return result.data;
+  },
+
+  updateCategory: async (id, categoryData) => {
+    const response = await fetch(`${API_BASE_URL}/categories/${id}`, {
+      method: 'PATCH',
+      headers: {
+        ...getHeaders(),
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(categoryData),
+    });
+    const result = await handleResponse(response);
+    return result.data;
+  },
+
+  deleteCategory: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/categories/${id}`, {
       method: 'DELETE',
       headers: getHeaders(),
     });

@@ -25,11 +25,12 @@ const sortTasks = (tasksList) => {
 export const useTasks = () => {
   const [tasks, setTasks] = useState([]);
   const [goals, setGoals] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all'); // 'all' | 'active' | 'completed'
 
-  // Fetch all tasks and goals from API
+  // Fetch all tasks, goals, and categories from API
   const fetchData = useCallback(async () => {
     if (!localStorage.getItem('token')) {
       setLoading(false);
@@ -38,12 +39,17 @@ export const useTasks = () => {
     setLoading(true);
     setError(null);
     try {
-      const [fetchedTasks, fetchedGoals] = await Promise.all([
+      const [fetchedTasks, fetchedGoals, fetchedCategories] = await Promise.all([
         api.getTasks(''),
-        api.getGoals()
+        api.getGoals(),
+        api.getCategories().catch(err => {
+          console.warn('Backend categories endpoint not fully ready or failing. Defaulting to empty.', err);
+          return [];
+        })
       ]);
       setTasks(sortTasks(fetchedTasks));
       setGoals(fetchedGoals);
+      setCategories(fetchedCategories || []);
     } catch (err) {
       setError(err.message || 'Failed to fetch data from server');
     } finally {
@@ -165,9 +171,66 @@ export const useTasks = () => {
     }
   };
 
+  const addCategory = async (catData) => {
+    setError(null);
+    try {
+      const newCategory = await api.createCategory(catData);
+      setCategories(prev => [...prev, newCategory]);
+      return newCategory;
+    } catch (err) {
+      setError(err.message || 'Failed to create category');
+      throw err;
+    }
+  };
+
+  const modifyCategory = async (id, catData) => {
+    setError(null);
+    try {
+      const updatedCategory = await api.updateCategory(id, catData);
+      setCategories(prev => prev.map(c => (c._id === id ? updatedCategory : c)));
+      
+      // Update tasks locally that were assigned to the old category name, if name changed
+      if (catData.name) {
+        const oldCat = categories.find(c => c._id === id);
+        if (oldCat && oldCat.name !== catData.name) {
+          setTasks(prev =>
+            prev.map(t => (t.category === oldCat.name ? { ...t, category: catData.name } : t))
+          );
+        }
+      }
+      return updatedCategory;
+    } catch (err) {
+      setError(err.message || 'Failed to update category');
+      throw err;
+    }
+  };
+
+  const deleteCategory = async (id) => {
+    setError(null);
+    const catToDelete = categories.find(c => c._id === id);
+    if (!catToDelete) return;
+    
+    let previousCategories = categories;
+    setCategories(prev => prev.filter(c => c._id !== id));
+    
+    // Set all tasks using this custom category back to 'Other'
+    setTasks(prev =>
+      prev.map(t => (t.category === catToDelete.name ? { ...t, category: 'Other' } : t))
+    );
+    
+    try {
+      await api.deleteCategory(id);
+    } catch (err) {
+      setError(err.message || 'Failed to delete category');
+      setCategories(previousCategories);
+      await fetchData();
+    }
+  };
+
   return {
     tasks,
     goals,
+    categories,
     loading,
     error,
     filter,
@@ -179,6 +242,9 @@ export const useTasks = () => {
     addGoal,
     modifyGoal,
     deleteGoal,
+    addCategory,
+    modifyCategory,
+    deleteCategory,
     refresh: fetchData,
   };
 };

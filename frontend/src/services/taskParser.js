@@ -11,6 +11,7 @@ export function parseTaskFromText(input) {
       title: '',
       dueDate: null,
       priority: 'medium',
+      category: 'Other',
       tags: [],
       description: ''
     };
@@ -223,10 +224,33 @@ export function parseTaskFromText(input) {
     cleanedTitle = input.trim();
   }
 
+  // Auto-detect Category based on text keywords
+  let category = 'Other';
+  const categoryKeywords = {
+    'Health': ['health', 'doctor', 'medicine', 'clinic', 'appointment', 'tablet', 'pill', 'dentist'],
+    'Office / Work': ['work', 'office', 'meeting', 'project', 'client', 'team', 'presentation', 'manager', 'marketing', 'job'],
+    'Personal': ['personal', 'family', 'friend', 'birthday', 'gift', 'wish', 'call'],
+    'Study': ['study', 'homework', 'exam', 'test', 'class', 'lecture', 'read', 'book', 'learn', 'course'],
+    'Finance': ['finance', 'bill', 'rent', 'pay', 'bank', 'tax', 'salary', 'credit', 'spend', 'money'],
+    'Fitness': ['fitness', 'gym', 'run', 'workout', 'walk', 'exercise', 'yoga', 'sport', 'training', 'cardio'],
+    'Shopping': ['shopping', 'buy', 'grocery', 'groceries', 'market', 'order', 'purchase', 'store', 'cart'],
+    'Home': ['home', 'cleaning', 'clean', 'wash', 'kitchen', 'laundry', 'repair', 'garden', 'house', 'dishes'],
+    'Travel': ['travel', 'flight', 'hotel', 'trip', 'ticket', 'pack', 'booking', 'visit', 'vacation', 'luggage']
+  };
+
+  const lowerInput = input.toLowerCase();
+  for (const [cat, keywords] of Object.entries(categoryKeywords)) {
+    if (keywords.some(keyword => new RegExp(`\\b${keyword}\\b`, 'i').test(lowerInput))) {
+      category = cat;
+      break;
+    }
+  }
+
   return {
     title: cleanedTitle,
     dueDate,
     priority,
+    category,
     tags,
     description
   };

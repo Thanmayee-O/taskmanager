@@ -5,11 +5,13 @@ import { ClipboardList, Sparkles, Search, X } from 'lucide-react';
 export default function TaskList({ 
   tasks, 
   goals, 
+  categories = [],
   onToggleTask, 
   onModifyTask, 
   onDeleteTask, 
   filter,
   selectedIndex,
+  selectedTaskId,
   searchQuery,
   onClearSearch
 }) {
@@ -75,10 +77,11 @@ export default function TaskList({
           key={task._id}
           task={task}
           goals={goals}
+          categories={categories}
           onToggleTask={onToggleTask}
           onModifyTask={onModifyTask}
           onDeleteTask={onDeleteTask}
-          isSelected={index === selectedIndex}
+          isSelected={selectedTaskId ? task._id === selectedTaskId : index === selectedIndex}
         />
       ))}
     </div>

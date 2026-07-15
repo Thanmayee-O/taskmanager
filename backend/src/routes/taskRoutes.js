@@ -6,6 +6,7 @@ import {
   updateTask,
   deleteTask,
   parseTaskText,
+  getTaskAnalytics,
 } from '../controllers/taskController.js';
 
 router.route('/')
@@ -13,6 +14,7 @@ router.route('/')
   .post(createTask);
 
 router.post('/parse', parseTaskText);
+router.get('/analytics', getTaskAnalytics);
 
 router.route('/:id')
   .patch(updateTask)

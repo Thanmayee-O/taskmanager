@@ -3,6 +3,7 @@ import cors from 'cors';
 import taskRoutes from './routes/taskRoutes.js';
 import goalRoutes from './routes/goalRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
 import { protect } from './middleware/authMiddleware.js';
 import errorHandler from './middleware/errorHandler.js';
 
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', protect, taskRoutes);
 app.use('/api/goals', protect, goalRoutes);
+app.use('/api/categories', protect, categoryRoutes);
 
 // Simple Healthcheck/Welcome route
 app.get('/', (req, res) => {

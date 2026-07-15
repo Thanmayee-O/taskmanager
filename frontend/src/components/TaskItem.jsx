@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Trash2, Calendar, Tag, Target, Check } from 'lucide-react';
 
-export default function TaskItem({ task, goals, onToggleTask, onModifyTask, onDeleteTask, isSelected }) {
-  const { _id, title, completed, dueDate, priority, tags = [], goalId } = task;
+export default function TaskItem({ task, goals, categories = [], onToggleTask, onModifyTask, onDeleteTask, isSelected }) {
+  const { _id, title, completed, dueDate, priority, tags = [], goalId, category = 'Other' } = task;
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(title);
   const [isSaving, setIsSaving] = useState(false);
@@ -80,6 +80,37 @@ export default function TaskItem({ task, goals, onToggleTask, onModifyTask, onDe
     low: 'bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-400 border-sky-200 dark:border-sky-900/40',
   };
 
+  // Resolve category color
+  let categoryColor = 'slate';
+  const matchedCustom = categories.find(c => c.name === category);
+  if (matchedCustom) {
+    categoryColor = matchedCustom.color;
+  } else {
+    // Map defaults
+    const defaultColorMap = {
+      'Work / Office': 'blue',
+      'Personal': 'purple',
+      'Health': 'emerald',
+      'Study': 'indigo'
+    };
+    categoryColor = defaultColorMap[category] || 'slate';
+  }
+
+  const categoryColorStyles = {
+    emerald: 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/30',
+    blue: 'bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-900/30',
+    purple: 'bg-purple-50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-900/30',
+    indigo: 'bg-indigo-50 dark:bg-indigo-950/30 text-indigo-700 dark:text-indigo-400 border-indigo-200 dark:border-indigo-900/30',
+    amber: 'bg-amber-50 dark:bg-amber-950/30 text-amber-705 dark:text-amber-450 border-amber-200 dark:border-amber-900/30',
+    pink: 'bg-pink-50 dark:bg-pink-950/30 text-pink-700 dark:text-pink-400 border-pink-200 dark:border-pink-900/30',
+    rose: 'bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-450 border-rose-200 dark:border-rose-900/30',
+    orange: 'bg-orange-50 dark:bg-orange-950/30 text-orange-700 dark:text-orange-400 border-orange-200 dark:border-orange-900/30',
+    cyan: 'bg-cyan-50 dark:bg-cyan-950/30 text-cyan-700 dark:text-cyan-400 border-cyan-200 dark:border-cyan-900/30',
+    slate: 'bg-slate-50 dark:bg-slate-950/40 text-slate-700 dark:text-slate-450 border-slate-200 dark:border-slate-805/40'
+  };
+
+  const badgeStyle = categoryColorStyles[categoryColor] || categoryColorStyles.slate;
+
   return (
     <div
       className={`group flex items-start gap-4 p-4 rounded-2xl border transition-all duration-300 ${
@@ -134,6 +165,11 @@ export default function TaskItem({ task, goals, onToggleTask, onModifyTask, onDe
           {/* Priority */}
           <span className={`inline-flex items-center text-[10px] font-bold px-2.5 py-0.5 rounded-full border uppercase tracking-wider ${priorityStyles[priority]}`}>
             {priority}
+          </span>
+
+          {/* Category */}
+          <span className={`inline-flex items-center text-[10px] font-bold px-2.5 py-0.5 rounded-full border uppercase tracking-wider ${badgeStyle}`}>
+            {category}
           </span>
 
           {/* Due Date */}

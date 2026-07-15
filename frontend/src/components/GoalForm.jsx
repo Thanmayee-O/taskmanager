@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, X, Calendar } from 'lucide-react';
 
-export default function GoalForm({ onAddGoal }) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function GoalForm({ onAddGoal, isOpen: externalIsOpen, setIsOpen: externalSetIsOpen, defaultPeriod = 'week' }) {
+  const [localIsOpen, setLocalIsOpen] = useState(false);
+  const isOpen = externalIsOpen !== undefined ? externalIsOpen : localIsOpen;
+  const setIsOpen = externalSetIsOpen !== undefined ? externalSetIsOpen : setLocalIsOpen;
+
   const [title, setTitle] = useState('');
-  const [period, setPeriod] = useState('week');
+  const [period, setPeriod] = useState(defaultPeriod);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    setPeriod(defaultPeriod);
+  }, [defaultPeriod]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

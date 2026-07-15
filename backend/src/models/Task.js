@@ -24,6 +24,10 @@ const taskSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    category: {
+      type: String,
+      default: 'Other',
+    },
     goalId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Goal',
