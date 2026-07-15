@@ -1,10 +1,10 @@
-const express = require('express');
-const cors = require('cors');
-const taskRoutes = require('./routes/taskRoutes');
-const goalRoutes = require('./routes/goalRoutes');
-const authRoutes = require('./routes/authRoutes');
-const { protect } = require('./middleware/authMiddleware');
-const errorHandler = require('./middleware/errorHandler');
+import express from 'express';
+import cors from 'cors';
+import taskRoutes from './routes/taskRoutes.js';
+import goalRoutes from './routes/goalRoutes.js';
+import authRoutes from './routes/authRoutes.js';
+import { protect } from './middleware/authMiddleware.js';
+import errorHandler from './middleware/errorHandler.js';
 
 const app = express();
 
@@ -34,4 +34,4 @@ app.get('/', (req, res) => {
 // Centralized error handler
 app.use(errorHandler);
 
-module.exports = app;
+export default app;

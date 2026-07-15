@@ -1,10 +1,10 @@
-const Goal = require('../models/Goal');
-const Task = require('../models/Task');
+import Goal from '../models/Goal.js';
+import Task from '../models/Task.js';
 
 // @desc    Get all goals (including computed progress)
 // @route   GET /api/goals
 // @access  Private
-exports.getGoals = async (req, res, next) => {
+export const getGoals = async (req, res, next) => {
   try {
     const goals = await Goal.find({ userId: req.userId });
 
@@ -34,7 +34,7 @@ exports.getGoals = async (req, res, next) => {
 // @desc    Create new goal
 // @route   POST /api/goals
 // @access  Private
-exports.createGoal = async (req, res, next) => {
+export const createGoal = async (req, res, next) => {
   try {
     const { title, period } = req.body;
 
@@ -70,7 +70,7 @@ exports.createGoal = async (req, res, next) => {
 // @desc    Update a goal
 // @route   PATCH /api/goals/:id
 // @access  Private
-exports.updateGoal = async (req, res, next) => {
+export const updateGoal = async (req, res, next) => {
   try {
     let goal = await Goal.findOne({ _id: req.params.id, userId: req.userId });
 
@@ -114,7 +114,7 @@ exports.updateGoal = async (req, res, next) => {
 // @desc    Delete a goal
 // @route   DELETE /api/goals/:id
 // @access  Private
-exports.deleteGoal = async (req, res, next) => {
+export const deleteGoal = async (req, res, next) => {
   try {
     const goal = await Goal.findOne({ _id: req.params.id, userId: req.userId });
 

@@ -142,7 +142,10 @@ export default function Login() {
       } else if (errMsg.toLowerCase().includes('user not found')) {
         setErrors((prev) => ({ ...prev, email: 'User not found' }));
         showToast('Login failed: User not found', 'error');
-      } else if (errMsg.toLowerCase().includes('invalid email or password') || errMsg.toLowerCase().includes('incorrect password')) {
+      } else if (errMsg.toLowerCase().includes('password does not match') || errMsg.toLowerCase().includes('incorrect password')) {
+        setErrors((prev) => ({ ...prev, password: 'Password does not match' }));
+        showToast('Login failed: Password does not match', 'error');
+      } else if (errMsg.toLowerCase().includes('invalid email or password')) {
         setServerError('Invalid email or password');
         showToast('Authentication failed', 'error');
       } else {

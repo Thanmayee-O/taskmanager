@@ -128,6 +128,21 @@ export function parseTaskFromText(input) {
   // Time expressions: e.g. "at 3pm", "at 11:30 PM", "10:30 AM", "15:00", "3pm"
   const timeRegex = /\b(?:at\s+)?(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b/i;
   const timeMatch = text.match(timeRegex);
+
+  // O'clock notation: e.g. "9'o clock", "3 o clock", "9 o'clock", "9 oclock"
+  const oClockRegex = /\b(?:at\s+)?(\d{1,2})\s*[']?\s*(?:o[']?\s*clock|o\s*clock|oclock|clock)\b/i;
+  const oClockMatch = text.match(oClockRegex);
+
+  // 24 hour notation fallback: e.g. "at 15:30", "18:00"
+  const time24Regex = /\b(?:at\s+)?(\d{2}):(\d{2})\b/i;
+  const time24Match = text.match(time24Regex);
+
+  // General period keywords: e.g. "morning", "afternoon", "evening", "night"
+  const isMorning = /\bmorning\b/i.test(text);
+  const isAfternoon = /\bafternoon\b/i.test(text);
+  const isEvening = /\bevening\b/i.test(text);
+  const isNight = /\bnight\b/i.test(text);
+
   if (timeMatch) {
     let hour = parseInt(timeMatch[1], 10);
     const minute = timeMatch[2] ? parseInt(timeMatch[2], 10) : 0;
@@ -139,25 +154,62 @@ export function parseTaskFromText(input) {
     targetDate.setHours(hour, minute, 0, 0);
     text = text.replace(timeRegex, '');
     timeParsed = true;
-    dateParsed = true;
-  } else {
-    // 24 hour notation fallback: e.g. "at 15:30", "18:00"
-    const time24Regex = /\b(?:at\s+)?(\d{2}):(\d{2})\b/i;
-    const time24Match = text.match(time24Regex);
-    if (time24Match) {
-      const hour = parseInt(time24Match[1], 10);
-      const minute = parseInt(time24Match[2], 10);
-      targetDate.setHours(hour, minute, 0, 0);
-      text = text.replace(time24Regex, '');
-      timeParsed = true;
-      dateParsed = true;
+  } else if (oClockMatch) {
+    let hour = parseInt(oClockMatch[1], 10);
+    let isPM = false;
+
+    if (isMorning) {
+      isPM = false;
+    } else if (isAfternoon || isEvening || isNight) {
+      isPM = true;
+    } else {
+      // Heuristic: 1-7 is PM, 8-11 is AM
+      if (hour >= 1 && hour <= 7) {
+        isPM = true;
+      }
     }
+
+    if (isPM && hour < 12) hour += 12;
+    if (!isPM && hour === 12) hour = 0;
+
+    targetDate.setHours(hour, 0, 0, 0);
+    text = text.replace(oClockRegex, '');
+    timeParsed = true;
+  } else if (time24Match) {
+    const hour = parseInt(time24Match[1], 10);
+    const minute = parseInt(time24Match[2], 10);
+    targetDate.setHours(hour, minute, 0, 0);
+    text = text.replace(time24Regex, '');
+    timeParsed = true;
+  } else if (isMorning || isAfternoon || isEvening || isNight) {
+    // Default period hours
+    let hour = 12;
+    if (isMorning) hour = 9;
+    else if (isAfternoon) hour = 13; // 1 PM
+    else if (isEvening) hour = 18; // 6 PM
+    else if (isNight) hour = 21; // 9 PM
+
+    targetDate.setHours(hour, 0, 0, 0);
+    timeParsed = true;
   }
 
-  // Convert to local datetime string format that matches HTML datetime-local: YYYY-MM-DDTHH:mm:ss
+  // Clean up general period keywords if a time was parsed
+  if (timeParsed) {
+    text = text.replace(/\b(morning|afternoon|evening|night)\b/ig, '');
+  }
+
+  // If time was parsed but no explicit date was set, default to today/tomorrow
+  if (timeParsed && !dateParsed) {
+    // If the target time has already passed today, set to tomorrow
+    if (targetDate < now) {
+      targetDate.setDate(now.getDate() + 1);
+    }
+    dateParsed = true;
+  }
+
+  // Convert to ISO-8601 string format
   if (dateParsed) {
-    const pad = (num) => String(num).padStart(2, '0');
-    dueDate = `${targetDate.getFullYear()}-${pad(targetDate.getMonth() + 1)}-${pad(targetDate.getDate())}T${pad(targetDate.getHours())}:${pad(targetDate.getMinutes())}:00`;
+    dueDate = targetDate.toISOString();
   }
 
   // Clean trailing/dangling prepositions (at, on, for, by, in)

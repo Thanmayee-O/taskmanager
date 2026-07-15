@@ -62,10 +62,11 @@ export default function TaskItem({ task, goals, onToggleTask, onModifyTask, onDe
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
     const date = new Date(dateStr);
-    return date.toLocaleDateString(undefined, {
+    return date.toLocaleString(undefined, {
       month: 'short',
       day: 'numeric',
-      timeZone: 'UTC',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   };
 

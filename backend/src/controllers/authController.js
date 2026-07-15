@@ -1,5 +1,5 @@
-const User = require('../models/User');
-const jwt = require('jsonwebtoken');
+import User from '../models/User.js';
+import jwt from 'jsonwebtoken';
 
 // Helper to generate JWT token
 const generateToken = (userId) => {
@@ -13,7 +13,7 @@ const generateToken = (userId) => {
 // @desc    Register a new user
 // @route   POST /api/auth/signup
 // @access  Public
-exports.signup = async (req, res, next) => {
+export const signup = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
 
@@ -81,7 +81,7 @@ exports.signup = async (req, res, next) => {
 // @desc    Authenticate a user & get token
 // @route   POST /api/auth/login
 // @access  Public
-exports.login = async (req, res, next) => {
+export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
@@ -92,13 +92,13 @@ exports.login = async (req, res, next) => {
     // Search user by email
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
-      return res.status(401).json({ success: false, message: 'Invalid email or password' });
+      return res.status(401).json({ success: false, message: 'User not found' });
     }
 
     // Compare input password hash with stored passwordHash
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      return res.status(401).json({ success: false, message: 'Invalid email or password' });
+      return res.status(401).json({ success: false, message: 'Password does not match' });
     }
 
     // Generate JWT token
@@ -121,7 +121,7 @@ exports.login = async (req, res, next) => {
 // @desc    Get current user profile
 // @route   GET /api/auth/me
 // @access  Private
-exports.me = async (req, res, next) => {
+export const me = async (req, res, next) => {
   try {
     const user = await User.findById(req.userId).select('name email createdAt');
     if (!user) {

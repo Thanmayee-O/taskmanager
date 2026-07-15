@@ -12,11 +12,22 @@ const getHeaders = (customToken) => {
 const handleResponse = async (response) => {
   if (response.status === 401) {
     localStorage.removeItem('token');
+    
+    let message = 'Unauthorized session. Please log in.';
+    try {
+      const errorData = await response.json();
+      if (errorData && errorData.message) {
+        message = errorData.message;
+      }
+    } catch (e) {
+      // Fallback if response does not contain json
+    }
+
     // Global 401 logout redirect (only if not already on the login page)
     if (typeof window !== 'undefined' && window.location.pathname !== '/login') {
       window.location.href = '/login';
     }
-    throw new Error('Unauthorized session. Please log in.');
+    throw new Error(message);
   }
 
   if (!response.ok) {
@@ -104,6 +115,18 @@ export const api = {
     });
     const result = await handleResponse(response);
     return result.data;
+  },
+
+  parseTaskWithAI: async (text) => {
+    const response = await fetch(`${API_BASE_URL}/tasks/parse`, {
+      method: 'POST',
+      headers: {
+        ...getHeaders(),
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text }),
+    });
+    return handleResponse(response);
   },
 
   // Goals

@@ -1,9 +1,9 @@
-const Task = require('../models/Task');
+import Task from '../models/Task.js';
 
 // @desc    Get all tasks
 // @route   GET /api/tasks
 // @access  Private
-exports.getTasks = async (req, res, next) => {
+export const getTasks = async (req, res, next) => {
   try {
     const { status } = req.query;
     let query = { userId: req.userId };
@@ -51,7 +51,7 @@ exports.getTasks = async (req, res, next) => {
 // @desc    Create new task
 // @route   POST /api/tasks
 // @access  Private
-exports.createTask = async (req, res, next) => {
+export const createTask = async (req, res, next) => {
   try {
     const { title, completed, dueDate, priority, tags, goalId } = req.body;
 
@@ -82,7 +82,7 @@ exports.createTask = async (req, res, next) => {
 // @desc    Update a task
 // @route   PATCH /api/tasks/:id
 // @access  Private
-exports.updateTask = async (req, res, next) => {
+export const updateTask = async (req, res, next) => {
   try {
     let task = await Task.findOne({ _id: req.params.id, userId: req.userId });
 
@@ -117,7 +117,7 @@ exports.updateTask = async (req, res, next) => {
 // @desc    Delete a task
 // @route   DELETE /api/tasks/:id
 // @access  Private
-exports.deleteTask = async (req, res, next) => {
+export const deleteTask = async (req, res, next) => {
   try {
     const task = await Task.findOne({ _id: req.params.id, userId: req.userId });
 
@@ -136,3 +136,129 @@ exports.deleteTask = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Parse raw task text with Gemini AI
+// @route   POST /api/tasks/parse
+// @access  Private
+export const parseTaskText = async (req, res, next) => {
+  try {
+    const { text } = req.body;
+
+    if (!text || text.trim() === '') {
+      return res.status(400).json({ success: false, message: 'Text to parse is required' });
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    if (!apiKey) {
+      console.warn('GEMINI_API_KEY is not configured in backend .env. Triggering fallback.');
+      return res.status(200).json({
+        success: true,
+        fallback: true,
+        data: null,
+        message: 'Gemini API key not configured. Fall back to local regex parser.'
+      });
+    }
+
+    const currentLocalTime = new Date().toISOString();
+    const prompt = `Parse the following task into JSON: "${text}". Reference current time is: ${currentLocalTime} (UTC).`;
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: prompt
+                }
+              ]
+            }
+          ],
+          generationConfig: {
+            responseMimeType: 'application/json',
+            responseSchema: {
+              type: 'OBJECT',
+              properties: {
+                title: {
+                  type: 'STRING',
+                  description: 'Cleaned task title without date, priority, or tags.'
+                },
+                dueDate: {
+                  type: 'STRING',
+                  description: 'ISO-8601 string format (e.g. YYYY-MM-DDTHH:mm:ss.sssZ) in UTC, or null if not specified. Calculate relative to the reference time.'
+                },
+                priority: {
+                  type: 'STRING',
+                  enum: ['low', 'medium', 'high'],
+                  description: 'low, medium, or high. Default to medium if not specified.'
+                },
+                tags: {
+                  type: 'ARRAY',
+                  items: {
+                    type: 'STRING'
+                  },
+                  description: 'Array of tags found, without the hash (#) symbol.'
+                }
+              },
+              required: ['title', 'priority', 'tags']
+            }
+          }
+        })
+      }
+    );
+
+    if (!response.ok) {
+      const errText = await response.text();
+      console.warn(`Gemini API call failed with status ${response.status}: ${errText}. Triggering fallback.`);
+      return res.status(200).json({
+        success: true,
+        fallback: true,
+        data: null,
+        message: `Gemini API returned error status ${response.status}. Fall back to local regex parser.`
+      });
+    }
+
+    const responseData = await response.json();
+    const candidate = responseData?.candidates?.[0];
+    const textResponse = candidate?.content?.parts?.[0]?.text;
+
+    if (!textResponse) {
+      console.warn('Gemini API returned an empty content candidates array. Triggering fallback.');
+      return res.status(200).json({
+        success: true,
+        fallback: true,
+        data: null,
+        message: 'Empty Gemini API response content. Fall back to local regex parser.'
+      });
+    }
+
+    const parsed = JSON.parse(textResponse);
+    return res.status(200).json({
+      success: true,
+      fallback: false,
+      data: {
+        title: parsed.title || text.trim(),
+        dueDate: parsed.dueDate || null,
+        priority: parsed.priority || 'medium',
+        tags: parsed.tags || [],
+      }
+    });
+
+  } catch (error) {
+    console.error('Error during AI task parsing:', error);
+    // Return clean fallback instead of crashing
+    return res.status(200).json({
+      success: true,
+      fallback: true,
+      data: null,
+      message: error.message || 'Error occurred during AI task parsing. Fall back to local regex parser.'
+    });
+  }
+};
+

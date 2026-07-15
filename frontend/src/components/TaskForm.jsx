@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Calendar, ChevronDown, ChevronUp, Tag, ShieldAlert, Target, Plus, Sparkles } from 'lucide-react';
 import { parseTaskFromText } from '../services/taskParser';
+import { api } from '../services/api';
 
 export default function TaskForm({ goals, onAddTask }) {
   const [title, setTitle] = useState('');
@@ -12,6 +13,7 @@ export default function TaskForm({ goals, onAddTask }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [parsedPreview, setParsedPreview] = useState(null);
+  const [isParsing, setIsParsing] = useState(false);
 
   const inputRef = useRef(null);
 
@@ -56,6 +58,49 @@ export default function TaskForm({ goals, onAddTask }) {
     }
   };
 
+  // AI refinement handler using Gemini API proxy with local fallback
+  const handleAIRefine = async () => {
+    if (!title.trim()) return;
+    setIsParsing(true);
+    setError('');
+    try {
+      const response = await api.parseTaskWithAI(title);
+      let parsed = null;
+      if (response.success && !response.fallback && response.data) {
+        parsed = response.data;
+      } else {
+        console.info('Using local parser fallback due to backend settings/failure.');
+        parsed = parseTaskFromText(title);
+      }
+
+      if (parsed.title) setTitle(parsed.title);
+      if (parsed.priority) setPriority(parsed.priority);
+      if (parsed.dueDate) {
+        setDueDate(parsed.dueDate.split('T')[0]);
+      }
+      if (parsed.tags && parsed.tags.length > 0) {
+        setTagsInput(parsed.tags.join(', '));
+      }
+      setParsedPreview(parsed);
+      setShowOptions(true);
+    } catch (err) {
+      console.warn('AI refinement error, falling back to local parsing:', err);
+      const parsed = parseTaskFromText(title);
+      if (parsed.title) setTitle(parsed.title);
+      if (parsed.priority) setPriority(parsed.priority);
+      if (parsed.dueDate) {
+        setDueDate(parsed.dueDate.split('T')[0]);
+      }
+      if (parsed.tags && parsed.tags.length > 0) {
+        setTagsInput(parsed.tags.join(', '));
+      }
+      setParsedPreview(parsed);
+      setShowOptions(true);
+    } finally {
+      setIsParsing(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title.trim()) return;
@@ -79,8 +124,11 @@ export default function TaskForm({ goals, onAddTask }) {
       // Format dueDate: if we have a manual YYYY-MM-DD input, combine it with parsed time or default noon
       let finalDueDate = null;
       if (dueDate) {
-        // Use manual date and format as local ISO-like string
-        finalDueDate = `${dueDate}T12:00:00`;
+        const [year, month, day] = dueDate.split('-').map(Number);
+        const d = new Date();
+        d.setFullYear(year, month - 1, day);
+        d.setHours(12, 0, 0, 0); // Default to local noon
+        finalDueDate = d.toISOString();
       } else if (parsed.dueDate) {
         finalDueDate = parsed.dueDate;
       }
@@ -138,17 +186,33 @@ export default function TaskForm({ goals, onAddTask }) {
             }}
             placeholder="Focus on a new task... (e.g. Call dentist tomorrow 3pm !high #health)"
             className="flex-1 bg-transparent border-none text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-0 text-base"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isParsing}
             onFocus={() => setShowOptions(true)}
           />
           {title.trim() && (
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold shadow-md active:scale-95 transition-all"
-            >
-              {isSubmitting ? '...' : 'Save'}
-            </button>
+            <>
+              <button
+                type="button"
+                onClick={handleAIRefine}
+                disabled={isSubmitting || isParsing}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold shadow-md active:scale-95 transition-all flex items-center gap-1.5 ${
+                  isParsing 
+                    ? 'bg-indigo-150 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 cursor-wait' 
+                    : 'bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/20 dark:hover:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 hover:text-indigo-750 dark:hover:text-indigo-300'
+                }`}
+                title="Refine task details with Gemini AI"
+              >
+                <Sparkles size={12} className={isParsing ? 'animate-spin' : 'animate-pulse text-indigo-500'} />
+                {isParsing ? 'Refining...' : 'AI Refine'}
+              </button>
+              <button
+                type="submit"
+                disabled={isSubmitting || isParsing}
+                className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold shadow-md active:scale-95 transition-all"
+              >
+                {isSubmitting ? '...' : 'Save'}
+              </button>
+            </>
           )}
           <button
             type="button"
@@ -176,8 +240,7 @@ export default function TaskForm({ goals, onAddTask }) {
                     month: 'short', 
                     day: 'numeric', 
                     hour: '2-digit', 
-                    minute: '2-digit',
-                    timeZone: 'UTC'
+                    minute: '2-digit'
                   })}
                 </span>
               </span>
